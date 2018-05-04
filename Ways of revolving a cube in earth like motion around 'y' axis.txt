@@ -1,0 +1,31 @@
+
+
+Ways of rotating a cube placed intitially at (a,0,0) about y axis:-
+1. Cube's 'z' axis tilted at 30 degree:
+	i. Cube not rotating on it's own tilted 'y' axis:
+		model = glm.mat4(1.0)
+		model = glm.rotate(model, 0.0001*t, (0,1,0))
+		model = glm.rotate(model, 30, (0,0,1))
+		
+	ii. Cube rotating on it's own tilted 'y' axis:
+		model = glm.mat4(1.0)
+		model = glm.rotate(model, 0.0001*t, (0,1,0))
+		model = glm.rotate(model, 30, (0,0,1))
+		model = glm.rotate(model, 0.0005*t, (-1,0,0))
+		
+		
+2. Cube's 'z' axis tilted at 30 degrees about the global axis (axes of cube are parallel to global axes before being tilted):
+	i.Cube not rotating on it's own tilted 'y' axis:
+		model = glm.mat4(1.0)
+		model = glm.rotate(model, 0.0001*t, (0,1,0))
+		model = glm.rotate(model, 30, (0,0,1))
+		model = glm.translate(model, (3,0,0))
+		model = glm.rotate(model, 0.0001*t, (0,-1,0))
+
+	ii. Cube rotating on it's own tilted 'y' axis:
+		model = glm.mat4(1.0)
+		model = glm.rotate(model, 0.0001*t, (0,1,0))
+		model = glm.rotate(model, 30, (0,0,1))
+		model = glm.translate(model, (3,0,0))
+		model = glm.rotate(model, 0.0001*t, (0,-1,0))
+		model = glm.rotate(model, 0.0005*t, (-1,0,0))
