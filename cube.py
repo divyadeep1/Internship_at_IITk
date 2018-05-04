@@ -9,7 +9,7 @@ import glm
 null = c_void_p(0)
 
 class Cube():
-	def __init__(self, Model, View, Projection):
+	def __init__(self, Model, View, Projection, Shader):
 		self.model = Model
 		self.view = View
 		self.projection = Projection
@@ -87,7 +87,8 @@ class Cube():
 		0.673,  0.211,  0.457,
 		0.820,  0.883,  0.371,
 		0.982,  0.099,  0.879]
-	
+		
+		self.shader = Shader
 		self.vertex_buffer = glGenBuffers(1);
 		array_type = GLfloat * len(self.vertices)
 		glBindBuffer(GL_ARRAY_BUFFER, self.vertex_buffer)
@@ -108,30 +109,17 @@ class Cube():
 	def mvp(self):
 		return (self.projection * self.view * self.model)
 		
-	def render(self, program_id, vertex_buffer, color_buffer):
-		glUniformMatrix4fv(glGetUniformLocation(program_id, "MVP"), 1, GL_FALSE, glm.value_ptr(self.mvp()))
+	def render(self):
+		glUseProgram(self.shader.ID)
+		glUniformMatrix4fv(glGetUniformLocation(self.shader.ID, "MVP"), 1, GL_FALSE, glm.value_ptr(self.mvp()))
 
 		glEnableVertexAttribArray(0)
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-		glVertexAttribPointer(
-			0,                  # attribute 0. No particular reason for 0, but must match the layout in the shader.
-			3,                  # len(vertex_data)
-			GL_FLOAT,           # type
-			GL_FALSE,           # ormalized?
-			0,                  # stride
-			null           		# array buffer offset (c_type == void*)
-			)
+		glBindBuffer(GL_ARRAY_BUFFER, self.vertex_buffer);
+		glVertexAttribPointer(0, 3,	GL_FLOAT, GL_FALSE,	0, null)
 
 		glEnableVertexAttribArray(1)
-		glBindBuffer(GL_ARRAY_BUFFER, color_buffer);
-		glVertexAttribPointer(
-			1,
-			3,
-			GL_FLOAT,
-			GL_FALSE,
-			0,
-			null
-			)
+		glBindBuffer(GL_ARRAY_BUFFER, self.color_buffer);
+		glVertexAttribPointer(1, 3,	GL_FLOAT, GL_FALSE,	0, null)
 		
 		# Draw the cube !
 		glDrawArrays(GL_TRIANGLES, 0, 12*3)
@@ -141,3 +129,4 @@ class Cube():
 	def __del__(self):
 		glDeleteBuffers(1, [self.vertex_buffer])
 		glDeleteBuffers(1, [self.color_buffer])
+		print("Cube's buffers deleted")

@@ -17,32 +17,22 @@ import glfw
 import sys
 import os
 import params
+import Shaders
 
 def main():
 	if not common.opengl_init():
 		return
-	
-	program_id = common.LoadShaders( "./shaders/CubeOfTriads/TransformVertexShader.vertexshader",
-		"./shaders/CubeOfTriads/ColorFragmentShader.fragmentshader" )
-	
+	vertex_file_path = "./shaders/CubeOfTriads/TransformVertexShader.vertexshader"
+	fragment_file_path = "./shaders/CubeOfTriads/ColorFragmentShader.fragmentshader"
+	s = Shaders.Shader(vertex_file_path, fragment_file_path)
 	m, v, p = common.mvp_init()	
-	c = cube.Cube(m, v, p)
-
+	c = cube.Cube(m, v, p, s)
 	while glfw.get_key(params.window,glfw.KEY_ESCAPE) != glfw.PRESS and not glfw.window_should_close(params.window):
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-
-		glUseProgram(program_id)
-
 		c.view = glm.lookAt(params.position, params.position+params.front, params.up)
-
-		c.render(program_id, c.vertex_buffer, c.color_buffer)
-
+		c.render()
 		glfw.swap_buffers(params.window)
-
 		glfw.poll_events()
-
-	c.__del__()
-	glDeleteProgram(program_id)
 	glfw.terminate()
 
 if __name__ == "__main__":
