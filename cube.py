@@ -87,6 +87,17 @@ class Cube():
 		0.673,  0.211,  0.457,
 		0.820,  0.883,  0.371,
 		0.982,  0.099,  0.879]
+	
+		self.vertex_buffer = glGenBuffers(1);
+		array_type = GLfloat * len(self.vertices)
+		glBindBuffer(GL_ARRAY_BUFFER, self.vertex_buffer)
+		glBufferData(GL_ARRAY_BUFFER, len(self.vertices) * 4, array_type(*self.vertices), GL_STATIC_DRAW)
+	
+
+		self.color_buffer = glGenBuffers(1)
+		array_type = GLfloat * len(self.colors)
+		glBindBuffer(GL_ARRAY_BUFFER, self.color_buffer)
+		glBufferData(GL_ARRAY_BUFFER, len(self.colors) * 4, array_type(*self.colors), GL_STATIC_DRAW)
 		
 	def rotate(self,angle,axis):
 		self.model = glm.rotate(self.model, angle, axis)
@@ -124,4 +135,9 @@ class Cube():
 		
 		# Draw the cube !
 		glDrawArrays(GL_TRIANGLES, 0, 12*3)
+		glDisableVertexAttribArray(0)
+		glDisableVertexAttribArray(1)
 
+	def __del__(self):
+		glDeleteBuffers(1, [self.vertex_buffer])
+		glDeleteBuffers(1, [self.color_buffer])
