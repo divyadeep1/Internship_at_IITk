@@ -16,53 +16,38 @@ import common
 import glfw
 import sys
 import os
+import params
 
-
-# Global window
-window = None
-null = c_void_p(0)
-
-#for camera
-position = glm.vec3(0,0,10)
-front = glm.vec3(0,0,-1)
-up = glm.vec3(0,1,0)
-
-#for mouse movements
-lastX = 512
-lastY = 256
-pitch = 0
-yaw = 3.14
-firstmouse = True
 
 def opengl_init():
-	global window
+	window = params.window
 	# Initialize the library
 	if not glfw.init():
 		print("Failed to initialize GLFW\n",file=sys.stderr)
 		return False
 
 	# Open Window and create its OpenGL context
-	window = glfw.create_window(1024, 768, "Tutorial 03", None, None) #(in the accompanying source code this variable will be global)
+	params.window = glfw.create_window(1024, 768, "Tutorial 03", None, None)
 	glfw.window_hint(glfw.SAMPLES, 4)
 	glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
 	glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 3)
 	glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, GL_TRUE)
 	glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
 
-	if not window:
+	if not params.window:
 		print("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n",file=sys.stderr)
 		glfw.terminate()
 		return False
 	
-	glfw.set_input_mode(window,glfw.STICKY_KEYS,GL_TRUE) #TODO put these 4 statements in init
-	glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_DISABLED)
+	glfw.set_input_mode(params.window,glfw.STICKY_KEYS,GL_TRUE)
+	glfw.set_input_mode(params.window, glfw.CURSOR, glfw.CURSOR_DISABLED)
 	
 	#setting callback functions
-	glfw.set_key_callback(window,key_events)
-	glfw.set_cursor_pos_callback(window,mouse_events)
+	glfw.set_key_callback(params.window,key_events)
+	glfw.set_cursor_pos_callback(params.window,mouse_events)
 	
 	# Initialize GLEW
-	glfw.make_context_current(window)
+	glfw.make_context_current(params.window)
 	glewExperimental = True
 
 	# GLEW is a framework for testing extension availability.  Please see tutorial notes for
@@ -74,49 +59,45 @@ def opengl_init():
 
 def mvp_init():
 	projection = glm.perspective(45.0, 4.0 / 3.0, 0.1, 100.0)
-	view = glm.lookAt(position, position+front, (0,1,0)) 
+	view = glm.lookAt(params.position, params.position+params.front, (0,1,0)) 
 	model = glm.mat4(1.0)
 	return model, view, projection
 
 def mouse_events(window, xpos, ypos):
-	global lastX
-	global lastY
-	global pitch
-	global yaw
-	global front
-	global firstmouse
+	global first_mouse_event
 	
-	if firstmouse:
-		lastX=xpos
-		lastY=ypos
-		firstmouse = False
+	if params.firstmouse:
+		params.lastX=xpos
+		params.lastY=ypos
+		params.firstmouse = False
 	mousespeed = 0.005
 	
-	xOffset =  (xpos - lastX)
-	yOffset = (lastY - ypos)
+	xOffset =  (xpos - params.lastX)
+	yOffset = (params.lastY - ypos)
 	
-	lastX = xpos
-	lastY = ypos
+	params.lastX = xpos
+	params.lastY = ypos
 	
-	yaw -= (xOffset * mousespeed)
-	pitch += (yOffset * mousespeed)
+	params.yaw -= (xOffset * mousespeed)
+	params.pitch += (yOffset * mousespeed)
 	
 	#if pitch>=89:
 	#	pitch = 89
 	#if pitch<=-89:
 	#	pitch = -89
 		
-	front.x = math.cos(pitch) * math.sin(yaw)
-	front.y = math.sin(pitch)
-	front.z = math.cos(pitch) * math.cos(yaw)
+	params.front.x = math.cos(params.pitch) * math.sin(params.yaw)
+	params.front.y = math.sin(params.pitch)
+	params.front.z = math.cos(params.pitch) * math.cos(params.yaw)
 	
-	
-
 def key_events(window,key,scancode,action,mods):
-	global position
-	global front
-	global up
-	
+	global first_keyboard_event
+	if first_keyboard_event:
+		position = params.position
+		front = params.front
+		up = params.up
+		first_keyboard_event
+		
 	#depth test
 	if action == glfw.PRESS and key == glfw.KEY_D:
 		if glIsEnabled (GL_DEPTH_TEST): glDisable(GL_DEPTH_TEST)
@@ -128,13 +109,13 @@ def key_events(window,key,scancode,action,mods):
 	
 	#camera control
 	cameraSpeed = 0.05
-	if glfw.get_key( window, glfw.KEY_UP ) == glfw.PRESS:
+	if glfw.get_key( params.window, glfw.KEY_UP ) == glfw.PRESS:
 		position += cameraSpeed * front 
-	if glfw.get_key( window, glfw.KEY_DOWN ) == glfw.PRESS:
+	if glfw.get_key( params.window, glfw.KEY_DOWN ) == glfw.PRESS:
 		position -= cameraSpeed * front
-	if glfw.get_key( window, glfw.KEY_RIGHT ) == glfw.PRESS:
+	if glfw.get_key( params.window, glfw.KEY_RIGHT ) == glfw.PRESS:
 		position -= glm.normalize(glm.cross(position, up)) * cameraSpeed
-	if glfw.get_key( window, glfw.KEY_LEFT ) == glfw.PRESS:
+	if glfw.get_key( params.window, glfw.KEY_LEFT ) == glfw.PRESS:
 		position += glm.normalize(glm.cross(position, up)) * cameraSpeed
 
 
@@ -163,18 +144,18 @@ def main():
 	glBindBuffer(GL_ARRAY_BUFFER, color_buffer)
 	glBufferData(GL_ARRAY_BUFFER, len(c.colors) * 4, array_type(*c.colors), GL_STATIC_DRAW)
 
-	while glfw.get_key(window,glfw.KEY_ESCAPE) != glfw.PRESS and not glfw.window_should_close(window):
+	while glfw.get_key(params.window,glfw.KEY_ESCAPE) != glfw.PRESS and not glfw.window_should_close(params.window):
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
 		glUseProgram(program_id)
 
-		c.view = glm.lookAt(position, position+front,	up)
+		c.view = glm.lookAt(params.position, params.position+params.front, params.up)
 
 		c.render(program_id, vertex_buffer, color_buffer)
 		glDisableVertexAttribArray(0)
 		glDisableVertexAttribArray(1)
 	
-		glfw.swap_buffers(window)
+		glfw.swap_buffers(params.window)
 
 		glfw.poll_events()
 
