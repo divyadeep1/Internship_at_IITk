@@ -4,15 +4,14 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from OpenGL.GLUT.special import *
 from OpenGL.GL.shaders import *
+
+import params
 import glm
 
 null = c_void_p(0)
 
 class Cube():
-	def __init__(self, Model, View, Projection, Shader):
-		self.model = Model
-		self.view = View
-		self.projection = Projection
+	def __init__(self, Shader):
 		self.vertices = [ 
 		-1.0,-1.0,-1.0,
 		-1.0,-1.0, 1.0,
@@ -107,7 +106,7 @@ class Cube():
 		self.model = glm.translate(self.model, position)
 	
 	def mvp(self):
-		return (self.projection * self.view * self.model)
+		return (params.projection() * params.view() * params.model())
 		
 	def render(self):
 		glUseProgram(self.shader.ID)

@@ -15,3 +15,8 @@ lastY = 256
 pitch = 0
 yaw = 3.14
 firstmouse = True
+
+#MVC!
+model = lambda: glm.mat4(1.0)
+view = lambda: glm.lookAt(position, position+front, up)
+projection = lambda: glm.perspective(45, 1024/768, 0.1, 100.0)

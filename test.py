@@ -26,10 +26,9 @@ def main():
 	fragment_file_path = "./shaders/CubeOfTriads/ColorFragmentShader.fragmentshader"
 	s = Shaders.Shader(vertex_file_path, fragment_file_path)
 	m, v, p = common.mvp_init()	
-	c = cube.Cube(m, v, p, s)
+	c = cube.Cube(s)
 	while glfw.get_key(params.window,glfw.KEY_ESCAPE) != glfw.PRESS and not glfw.window_should_close(params.window):
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-		c.view = glm.lookAt(params.position, params.position+params.front, params.up)
 		c.render()
 		glfw.swap_buffers(params.window)
 		glfw.poll_events()
