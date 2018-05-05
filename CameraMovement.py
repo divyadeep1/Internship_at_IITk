@@ -25,13 +25,14 @@ def main():
 	vertex_file_path = "./shaders/CubeOfTriads/TransformVertexShader.vertexshader"
 	fragment_file_path = "./shaders/CubeOfTriads/ColorFragmentShader.fragmentshader"
 	s = Shaders.Shader(vertex_file_path, fragment_file_path)
-	m, v, p = common.mvp_init()	
 	c = cube.Cube(s)
 	while glfw.get_key(params.window,glfw.KEY_ESCAPE) != glfw.PRESS and not glfw.window_should_close(params.window):
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 		c.render()
 		glfw.swap_buffers(params.window)
 		glfw.poll_events()
+	c.release()
+	s.release()
 	glfw.terminate()
 
 if __name__ == "__main__":

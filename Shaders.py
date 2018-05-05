@@ -58,6 +58,6 @@ class Shader:
 		glDeleteShader(self.VertexShaderID);
 		glDeleteShader(self.FragmentShaderID);
 
-	def __del__(self):
-		print("Shader Deleted.")
+	def release(self):
 		glDeleteProgram(self.ID)
+		print("Shader Deleted.")

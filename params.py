@@ -4,10 +4,16 @@ from ctypes import c_void_p
 window = None
 null = c_void_p(0)
 
-#for camera
+#for view matrix
 position = glm.vec3(0,0,10)
 front = glm.vec3(0,0,-1)
 up = glm.vec3(0,1,0)
+
+#for projection/perspective matrix
+fov = 45
+aspect_ratio = 1024/768
+near_clipping_plane = 0.1
+far_clipping_plane = 100.0
 
 #for mouse movements
 lastX = 512
@@ -19,4 +25,4 @@ firstmouse = True
 #MVC!
 model = lambda: glm.mat4(1.0)
 view = lambda: glm.lookAt(position, position+front, up)
-projection = lambda: glm.perspective(45, 1024/768, 0.1, 100.0)
+projection = lambda: glm.perspective(fov, aspect_ratio, near_clipping_plane, far_clipping_plane)

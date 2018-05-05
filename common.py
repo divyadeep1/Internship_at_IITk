@@ -114,9 +114,4 @@ def key_events(window,key,scancode,action,mods):
 	if glfw.get_key( params.window, glfw.KEY_LEFT ) == glfw.PRESS:
 		params.position += glm.normalize(glm.cross(params.position, params.up)) * cameraSpeed
 
-def mvp_init():
-	projection = glm.perspective(45.0, 4.0 / 3.0, 0.1, 100.0)
-	view = glm.lookAt(params.position, params.position+params.front, (0,1,0)) 
-	model = glm.mat4(1.0)
-	return model, view, projection
-
+#mvp_init() removed

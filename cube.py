@@ -125,7 +125,7 @@ class Cube():
 		glDisableVertexAttribArray(0)
 		glDisableVertexAttribArray(1)
 
-	def __del__(self):
+	def release(self):
 		glDeleteBuffers(1, [self.vertex_buffer])
 		glDeleteBuffers(1, [self.color_buffer])
 		print("Cube's buffers deleted")
