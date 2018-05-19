@@ -95,11 +95,11 @@ def mouse_events(window, xpos, ypos):
 	
 def key_events(window,key,scancode,action,mods):
 	#depth test
-	if action == glfw.PRESS and key == glfw.KEY_D:
-		if glIsEnabled (GL_DEPTH_TEST): glDisable(GL_DEPTH_TEST)
-		else: glEnable(GL_DEPTH_TEST)
+	#if action == glfw.PRESS and key == glfw.KEY_D:
+	#	if glIsEnabled (GL_DEPTH_TEST): glDisable(GL_DEPTH_TEST)
+	#	else: glEnable(GL_DEPTH_TEST)
 
-		glDepthFunc(GL_LESS)
+	#	glDepthFunc(GL_LESS)
 
 		#glDepthFunc(GL_LESS)
 	

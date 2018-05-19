@@ -124,7 +124,8 @@ class Cube():
 		glDrawArrays(GL_TRIANGLES, 0, 12*3)
 		glDisableVertexAttribArray(0)
 		glDisableVertexAttribArray(1)
-
+		glEnable(GL_DEPTH_TEST)
+		
 	def release(self):
 		glDeleteBuffers(1, [self.vertex_buffer])
 		glDeleteBuffers(1, [self.color_buffer])
