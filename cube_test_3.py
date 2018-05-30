@@ -14,9 +14,9 @@ null = c_void_p(0)
 class Cube():
 	def __init__(self, Shader):
 		self.vertices = [-1.0, -1.0, -1.0,
-						 1.0, -1.0, -1.0,
-						 1.0, 1.0, -1.0,
 						 -1.0, 1.0, -1.0,
+						 1.0, 1.0, -1.0,
+						 1.0, -1.0, -1.0,
 						 -1.0, -1.0, -1.0,
 						 1.0, -1.0, -1.0, 
 						 1.0, -1.0, 1.0, 
@@ -26,9 +26,9 @@ class Cube():
 						 1.0, 1.0, 1.0, 
 						 1.0, -1.0, 1.0, 
 						 -1.0, -1.0, -1.0, 
-						 -1.0, 1.0, -1.0, 
-						 -1.0, 1.0, 1.0, 
 						 -1.0, -1.0, 1.0, 
+						 -1.0, 1.0, 1.0, 
+						 -1.0, 1.0, -1.0, 
 						 1.0, 1.0, -1.0, 
 						 -1.0, 1.0, -1.0, 
 						 -1.0, 1.0, 1.0, 
@@ -38,9 +38,9 @@ class Cube():
 						 1.0, 1.0, 1.0, 
 						 -1.0, 1.0, 1.0,
 						 5.0,-1.5,5.0,
-						 -5.0,-1.5,5.0,
+						 5.0,-1.5,-5.0,
 						 -5.0,-1.5,-5.0,
-						 5.0,-1.5,-5.0]
+						 -5.0,-1.5,5.0]
 		
 		self.colors = [0.67, 0.92, 0.46,
 					   0.67, 0.92, 0.46,
@@ -128,13 +128,15 @@ class Cube():
 		return (params.projection() * params.view() * params.model())
 		
 	def render(self):
+		glEnable(GL_CULL_FACE)
+		glCullFace(GL_BACK)
 		glUseProgram(self.shader.ID)
 		glUniformMatrix4fv(glGetUniformLocation(self.shader.ID, "model"), 1, GL_FALSE, glm.value_ptr(params.model()))
 		glUniformMatrix4fv(glGetUniformLocation(self.shader.ID, "MVP"), 1, GL_FALSE, glm.value_ptr(self.mvp()))
 		light_color = glm.vec3(1.0, 1.0, 1.0)
 		glUniform3f(glGetUniformLocation(self.shader.ID, "lightColor"), light_color.x, light_color.y, light_color.z)
 		params.t = (params.t+1)%1000000000
-		light_position = glm.vec3(10*math.sin(0.0002*params.t), 10.0, 10*math.cos(0.0002*params.t))
+		light_position = glm.vec3(5*math.sin(0.0002*params.t), 1.0, 5*math.cos(0.0002*params.t))
 		glUniform3f(glGetUniformLocation(self.shader.ID, "lightPosition"), light_position.x, light_position.y, light_position.z)
 		glUniform3f(glGetUniformLocation(self.shader.ID, "viewPos"), params.position.x, params.position.y, params.position.z)
 
@@ -151,7 +153,7 @@ class Cube():
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, null)
 		
 		# Draw the cube !
-		glDrawArrays(GL_QUADS, 0, 6*5)
+		glDrawArrays(GL_QUADS, 0, 28)
 		glEnable(GL_DEPTH_TEST)
 		glDisableVertexAttribArray(0)
 		glDisableVertexAttribArray(1)

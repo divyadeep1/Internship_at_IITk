@@ -9,7 +9,7 @@ from OpenGL.GLUT.special import *
 from OpenGL.GL.shaders import *
 from glew_wish import *
 
-import cube_test as cube
+import cube_test_3 as cube
 import math
 import glm
 import common
@@ -22,8 +22,8 @@ import Shaders
 def main():
 	if not common.opengl_init():
 		return
-	vertex_file_path = "./shaders/LightEffects/LightVertexShader.vertexshader"
-	fragment_file_path = "./shaders/LightEffects/LightFragmentShader.fragmentshader"
+	vertex_file_path = "./shaders/Test/TransformVertexShader.vertexshader"
+	fragment_file_path = "./shaders/Test/TransformFragmentShader.fragmentshader"
 	s = Shaders.Shader(vertex_file_path, fragment_file_path)
 	c = cube.Cube(s)
 	while glfw.get_key(params.window,glfw.KEY_ESCAPE) != glfw.PRESS and not glfw.window_should_close(params.window):
@@ -31,9 +31,8 @@ def main():
 		c.render()
 		glfw.swap_buffers(params.window)
 		glfw.poll_events()
-	c.release()
-	s.release()
 	glfw.terminate()
+	c.release()
 
 if __name__ == "__main__":
 	main()

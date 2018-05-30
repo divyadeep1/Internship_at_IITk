@@ -5,8 +5,8 @@ window = None
 null = c_void_p(0)
 
 #for view matrix
-position = glm.vec3(4,3,5)
-front = glm.vec3(-4,-3,-5)
+position = glm.vec3(0,2,5)
+front = glm.vec3(0,-2,-5)
 up = glm.vec3(0,1,0)
 
 #for projection/perspective matrix
@@ -26,6 +26,7 @@ firstmouse = True
 model = lambda: glm.mat4(1.0)
 view = lambda: glm.lookAt(position, position+front, up)
 projection = lambda: glm.perspective(fov, aspect_ratio, near_clipping_plane, far_clipping_plane)
+
 
 #time
 t = 0

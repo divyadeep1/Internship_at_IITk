@@ -1,0 +1,25 @@
+#version 330 core
+
+//layout(location=0) out float fragmentdepth;
+
+
+//The following main() is obtained from "LearnOpenGL tutorial on Shadow Mapping"
+/*
+void main(){
+    // Not really needed, OpenGL does it anyway
+    gl_FragDepth = gl_FragCoord.z;
+}
+*/
+
+
+// The following main() is obtained from "https://gamedev.stackexchange.com/questions/115355/implementing-shadow-mapping-in-python-and-opengl-2-1?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa"
+void main()                                                                         
+{
+    float z = gl_FragCoord.z;
+    float n = 1.0;
+    float f = 1000.0;
+    //convert to linear values   
+    //formula can be found at www.roxlu.com/2014/036/rendering-the-depth-buffer 
+    float c = (2.0 * n) / (f + n - z * (f - n));                             
+    gl_FragDepth = c;          
+}
