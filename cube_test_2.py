@@ -42,7 +42,7 @@ class Cube():
 						 50.0,-1.5,-50.0,
 						 -50.0,-1.5,-50.0,
 						 -50.0,-1.5,50.0]
-						 
+		"""			 
 		self.colors = [0.67, 0.92, 0.46,
 					   0.67, 0.92, 0.46,
 					   0.67, 0.92, 0.46,
@@ -71,7 +71,22 @@ class Cube():
 		 			   0.3, 0.3, 0.3,
 		 			   0.3, 0.3, 0.3,
 		 			   0.3, 0.3, 0.3]
-		
+		"""
+		self.colors = [ 0.33459217,  0.52109137,  0.19287258,  0.90671413,  0.41533494,
+        0.31015218,  0.30972265,  0.13518232,  0.0407303 ,  0.0729219 ,
+        0.04188457,  0.40966579,  0.8028398 ,  0.92307538,  0.4064563 ,
+        0.18387149,  0.95361129,  0.03470272,  0.10161366,  0.38676869,
+        0.15068039,  0.46669433,  0.79634865,  0.71430582,  0.86256922,
+        0.93558262,  0.67102294,  0.69232786,  0.24447952,  0.00685775,
+        0.46393682,  0.38077464,  0.52903373,  0.42553311,  0.09687797,
+        0.08238901,  0.68573079,  0.35895002,  0.16919371,  0.30924682,
+        0.4181197 ,  0.26068711,  0.92050772,  0.88765391,  0.82302449,
+        0.82970281,  0.31480517,  0.32702964,  0.72497687,  0.90491857,
+        0.74653115,  0.54174117,  0.56376659,  0.28842234,  0.65365089,
+        0.72726322,  0.14596222,  0.31691812,  0.89520995,  0.05670388,
+        0.55670408,  0.72836696,  0.83389241,  0.49575873,  0.57479909,
+        0.22893076,  0.06169841,  0.73281573,  0.34156023,  0.24480244,
+        0.00138273,  0.23266155,  0.4736198 ,  0.86236781,  0.95066312, 0.4736198 ,  0.86236781,  0.95066312, 0.4736198 ,  0.86236781,  0.95066312]
 		self.normals = [0.0,0.0,-1.0,
 						0.0,0.0,-1.0,
 						0.0,0.0,-1.0,
@@ -145,6 +160,11 @@ class Cube():
 		glDrawBuffer(GL_NONE)
 		glReadBuffer(GL_NONE)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0)
+		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE):
+			print("Framebuffer for rendering shadow map successfully created!")
+		else:
+			print("Framebuffer creation failed")
+			return
 		
 		###Quad Shader for rendering the shadow map made by the texture. Uses a 3rd shader.
 		self.quadVertices = [
@@ -168,16 +188,16 @@ class Cube():
 	def render(self):
 		light_color = glm.vec3(1.0, 1.0, 1.0)
 		params.t = (params.t+1)%1000000000
-		light_position = glm.vec3(0.0,5.0,1.0)#glm.vec3(0.0, 5*math.sin(0.0002*params.t), 5*math.cos(0.0002*params.t))#glm.vec3(6.0,6.0,0.0)
+		light_position = glm.vec3(5*math.sin(0.0002*params.t), 1.0, 5*math.cos(0.0002*params.t))#glm.vec3(6.0,6.0,0.0)
 		
 		
 		######RENDERING DEPTH OF SCENE FROM LIGHT'S PERSPECTIVE######
 		glClearColor(0.1, 0.1, 0.1, 1.0)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-		near_plane = 1.0
-		far_plane = 7.5
-		lightProjection = glm.ortho(-10.0, 10.0, -10.0, 10.0, near_plane, far_plane)
+		near_plane = -1.0
+		far_plane = 30
+		lightProjection = glm.ortho(-10.0, 10.0, -10.0, 10.0, near_plane, far_plane)#glm.perspective(60, float(512)/512,0.1,100)
 		lightView = glm.lookAt(light_position, glm.vec3(0.0), glm.vec3(0.0, 1.0, 0.0))
 		
 		###Trying out bias matrix
@@ -195,8 +215,8 @@ class Cube():
 		glUniformMatrix4fv(glGetUniformLocation(self.shadow_shader.ID, "lightSpaceMatrix"), 1, GL_FALSE, glm.value_ptr(lightSpaceMatrix))
 
 		glViewport(0, 0, self.SHADOW_WIDTH, self.SHADOW_HEIGHT)
-		#glEnable(GL_CULL_FACE)
-		#glCullFace(GL_BACK)
+		glEnable(GL_CULL_FACE)
+		glCullFace(GL_BACK)
 		glBindFramebuffer(GL_FRAMEBUFFER, self.depthMapFBO)
 		glClear(GL_DEPTH_BUFFER_BIT)
 		#glActiveTexture(GL_TEXTURE0)
@@ -204,7 +224,7 @@ class Cube():
 		glEnableVertexAttribArray(0)
 		glBindBuffer(GL_ARRAY_BUFFER, self.vertex_buffer);
 		glVertexAttribPointer(0, 3,	GL_FLOAT, GL_FALSE,	0, null)
-		glDrawArrays(GL_QUADS, 0, 6*5)
+		glDrawArrays(GL_QUADS, 0, 28)
 		glDisableVertexAttribArray(0)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0)
 		
@@ -240,7 +260,7 @@ class Cube():
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, null)
 		
 		# Draw the cube !
-		glDrawArrays(GL_QUADS, 0, 6*5)
+		glDrawArrays(GL_QUADS, 0, 28)
 		glEnable(GL_DEPTH_TEST)
 		glDisableVertexAttribArray(0)
 		glDisableVertexAttribArray(1)
@@ -248,6 +268,7 @@ class Cube():
 		
 		
 		#####RENDERING THE SHADOWMAP#####
+		glBindFramebuffer(GL_FRAMEBUFFER, 0)
 		glViewport(0,0,512,512)
 		glUseProgram(self.quad.ID)
 		glActiveTexture(GL_TEXTURE0)
@@ -269,13 +290,14 @@ class Cube():
 		glBindVertexArray(self.quadVAO)
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
 		glBindVertexArray(0)
-		#glDisableVertexAttribArray(0)
-		#glDisableVertexAttribArray(1)
+		glDisableVertexAttribArray(0)
+		glDisableVertexAttribArray(1)
 		
 		
 	def release(self):
 		glDeleteBuffers(1, [self.vertex_buffer])
 		glDeleteBuffers(1, [self.color_buffer])
 		glDeleteBuffers(1, [self.normal_buffer])
+		glDeleteFramebuffers(1, [self.depthMapFBO])
 		print("Cube's buffers deleted")
 

@@ -1,6 +1,11 @@
+####### 30/05/2018 ########
 1.  Light Effects Improved (Run LightEffects.py):
 		Note - To change light's properties (position and color), look for the same in 'cube_test.py' file.
 
 2.  Shadows (somewhat):
 		Run 'test.py' to look at shadows.
 		Note - To change light's properties (position and color), look for the same in 'cube_test_2.py' file.
+		
+####### 31/05/2018 ########
+1. Shadows (completed):
+		Run 'test.py' to look at shadows.
