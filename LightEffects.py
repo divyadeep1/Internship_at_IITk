@@ -9,7 +9,7 @@ from OpenGL.GLUT.special import *
 from OpenGL.GL.shaders import *
 from glew_wish import *
 
-import cube_test as cube
+import cube_with_light_effects as cube
 import math
 import glm
 import common

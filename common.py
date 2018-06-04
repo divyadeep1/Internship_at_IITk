@@ -95,13 +95,11 @@ def mouse_events(window, xpos, ypos):
 	
 def key_events(window,key,scancode,action,mods):
 	#depth test
-	#if action == glfw.PRESS and key == glfw.KEY_D:
-	#	if glIsEnabled (GL_DEPTH_TEST): glDisable(GL_DEPTH_TEST)
-	#	else: glEnable(GL_DEPTH_TEST)
-
-	#	glDepthFunc(GL_LESS)
-
+	if action == glfw.PRESS and key == glfw.KEY_D:
+		if glIsEnabled (GL_DEPTH_TEST): glDisable(GL_DEPTH_TEST)
+		else: glEnable(GL_DEPTH_TEST)
 		#glDepthFunc(GL_LESS)
+	#glDepthFunc(GL_LESS)
 	
 	#camera control
 	cameraSpeed = 0.05
@@ -113,5 +111,3 @@ def key_events(window,key,scancode,action,mods):
 		params.position -= glm.normalize(glm.cross(params.position, params.up)) * cameraSpeed
 	if glfw.get_key( params.window, glfw.KEY_LEFT ) == glfw.PRESS:
 		params.position += glm.normalize(glm.cross(params.position, params.up)) * cameraSpeed
-
-#mvp_init() removed
