@@ -131,11 +131,10 @@ class Cube():
 		glUseProgram(self.shader.ID)
 		glUniformMatrix4fv(glGetUniformLocation(self.shader.ID, "model"), 1, GL_FALSE, glm.value_ptr(params.model()))
 		glUniformMatrix4fv(glGetUniformLocation(self.shader.ID, "MVP"), 1, GL_FALSE, glm.value_ptr(self.mvp()))
-		light_color = glm.vec3(1.0, 1.0, 1.0)
-		glUniform3f(glGetUniformLocation(self.shader.ID, "lightColor"), light_color.x, light_color.y, light_color.z)
-		params.t = (params.t+1)%1000000000
-		light_position = glm.vec3(5*math.sin(0.0002*params.t), 0.5, 5*math.cos(0.0002*params.t))
-		glUniform3f(glGetUniformLocation(self.shader.ID, "lightPosition"), light_position.x, light_position.y, light_position.z)
+		glUniform3f(glGetUniformLocation(self.shader.ID, "lightColor"), params.light_color.x, params.light_color.y, params.light_color.z)
+		#params.t = (params.t+1)%1000000000
+		#light_position = glm.vec3(5*math.sin(0.0002*params.t), 0.5, 5*math.cos(0.0002*params.t))
+		glUniform3f(glGetUniformLocation(self.shader.ID, "lightPosition"), params.light_position.x, params.light_position.y, params.light_position.z)
 		glUniform3f(glGetUniformLocation(self.shader.ID, "viewPos"), params.position.x, params.position.y, params.position.z)
 
 		glEnableVertexAttribArray(0)

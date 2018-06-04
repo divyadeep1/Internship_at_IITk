@@ -9,3 +9,8 @@
 ####### 31/05/2018 ########
 1. Shadows (completed):
 		Run 'test.py' to look at shadows.
+
+####### 04/06/2018 ########
+1. Code for shadow organized.
+2. Window like block created:
+		Run test_3.py

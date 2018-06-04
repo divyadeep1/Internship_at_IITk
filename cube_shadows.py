@@ -113,8 +113,8 @@ class Cube():
         ######DIFFERENT CODE FROM cube_test_1.py file BEGINS######
 
         # Shadow texture + framebufferobject
-        self.shadow_shader = Shaders.Shader('./shaders/Test2/StandardShadowShading.vertexshader',
-                                            './shaders/Test2/StandardShadowShading.fragmentshader')
+        self.shadow_shader = Shaders.Shader('./shaders/Shadow/StandardShadowShading.vertexshader',
+                                            './shaders/Shadow/StandardShadowShading.fragmentshader')
         self.depthMapFBO = glGenFramebuffers(1)
         self.SHADOW_WIDTH = 1024
         self.SHADOW_HEIGHT = 1024
@@ -144,6 +144,7 @@ class Cube():
             return
 
         # Quad Shader for rendering the shadow map made by the texture. Uses a 3rd shader.
+        """
         self.quadVertices = [
             -1.0,  1.0, 0.0, 0.0, 1.0,
             -1.0, -1.0, 0.0, 0.0, 0.0,
@@ -151,9 +152,9 @@ class Cube():
             1.0, -1.0, 0.0, 1.0, 0.0]
         self.quadVBO = 0
         self.quadVAO = 0
-        self.quad = Shaders.Shader('./shaders/Test2/QuadVertexShader.vertexshader',
-                                   './shaders/Test2/QuadFragmentShader.fragmentshader')
-
+        self.quad = Shaders.Shader('./shaders/Shadow/QuadVertexShader.vertexshader',
+                                   './shaders/Shadow/QuadFragmentShader.fragmentshader')
+        """
     def rotate(self, angle, axis):
         self.model = glm.rotate(self.model, angle, axis)
 
