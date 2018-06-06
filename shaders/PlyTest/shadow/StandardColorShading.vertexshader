@@ -1,0 +1,29 @@
+#version 330 core
+
+// Input vertex data, different for all executions of this shader.
+layout(location = 0) in vec3 vertexPosition_modelspace;
+//layout(location = 1) in vec3 vertexColor;
+layout(location = 1) in vec3 aNormal;
+
+// Output data will be interpolated for each fragment.
+out vec3 fragmentColor;
+out vec3 normal;
+out vec3 fragPos;
+out vec4 fragPosLightSpace;
+
+// Values that stay constant for the whole mesh.
+uniform mat4 MVP;
+uniform mat4 model;
+uniform mat4 lightSpaceMatrix;
+
+
+void main(){	
+
+	// Output position of the vertex, in clip space : MVP * position
+	gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
+	fragPos = vec3(model * vec4(vertexPosition_modelspace, 1));
+	fragmentColor = vec3(0.7,0.7,0.7);
+	fragPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.0);
+	normal = mat3(transpose(inverse(model))) * aNormal;
+}
+

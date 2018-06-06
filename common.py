@@ -12,7 +12,7 @@ import os
 import params
 import glm
 import math
-
+from PIL import Image
 frame_count = 0
 
 def pre_frame():
@@ -84,10 +84,10 @@ def mouse_events(window, xpos, ypos):
 	params.yaw -= (xOffset * mousespeed)
 	params.pitch += (yOffset * mousespeed)
 	
-	#if pitch>=89:
-	#	pitch = 89
-	#if pitch<=-89:
-	#	pitch = -89
+	if params.pitch>=89:
+		params.pitch = 89
+	if params.pitch<=-89:
+		params.pitch = -89
 		
 	params.front.x = math.cos(params.pitch) * math.sin(params.yaw)
 	params.front.y = math.sin(params.pitch)
@@ -101,8 +101,23 @@ def key_events(window,key,scancode,action,mods):
 		#glDepthFunc(GL_LESS)
 	#glDepthFunc(GL_LESS)
 	
+	#Reset camera position
+	if action == glfw.PRESS and key == glfw.KEY_R:
+		params.position = glm.vec3(20,15,10)
+		params.front = glm.vec3(0,-2,-5)
+		params.up = glm.vec3(0,1,0)
+		
+	#Take screenshot
+	if action == glfw.PRESS and key == glfw.KEY_S:
+		print("Taking sceenshot")
+		data = glReadPixels(0, 0, 1024, 768, GL_RGB, GL_UNSIGNED_BYTE)
+		image = Image.frombytes("RGB", (1024, 768), data)
+		image = image.transpose(Image.FLIP_TOP_BOTTOM)
+		name = "Test"
+		image.save(os.path.join("./", name), format='png')
+		
 	#camera control
-	cameraSpeed = 0.05
+	cameraSpeed = 0.5
 	if glfw.get_key( params.window, glfw.KEY_UP ) == glfw.PRESS:
 		params.position += cameraSpeed * params.front 
 	if glfw.get_key( params.window, glfw.KEY_DOWN ) == glfw.PRESS:
