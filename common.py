@@ -5,6 +5,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLUT.special import *
 from OpenGL.GL.shaders import *
 from glew_wish import *
+from datetime import datetime
 
 import glfw
 import sys
@@ -93,6 +94,9 @@ def mouse_events(window, xpos, ypos):
 	params.front.y = math.sin(params.pitch)
 	params.front.z = math.cos(params.pitch) * math.cos(params.yaw)
 	
+	params.ortho_front.x = math.cos(params.pitch) * math.sin(params.yaw)
+	params.ortho_front.y = math.sin(params.pitch)
+	params.ortho_front.z = math.cos(params.pitch) * math.cos(params.yaw)
 def key_events(window,key,scancode,action,mods):
 	#depth test
 	if action == glfw.PRESS and key == glfw.KEY_D:
@@ -103,26 +107,42 @@ def key_events(window,key,scancode,action,mods):
 	
 	#Reset camera position
 	if action == glfw.PRESS and key == glfw.KEY_R:
-		params.position = glm.vec3(20,15,10)
-		params.front = glm.vec3(0,-2,-5)
+		params.position = glm.vec3(8.34048, 2.24112, 15.9789)
+		params.front = glm.vec3(0.00150267, 0.331372, -0.943499)
 		params.up = glm.vec3(0,1,0)
 		
+	if action == glfw.PRESS and key == glfw.KEY_B:
+		if params.switch:
+			params.position = glm.vec3(9.59996,8.13144,20.7899)
+			params.front = glm.vec3(1.4437e-05,0,-1)
+			params.projection = lambda: glm.ortho(-10,30,-10,20,0.1,100)
+			params.switch = False
+		else:
+			params.position = glm.vec3(20,15,10)
+			front = glm.vec3(0,-2,-5)
+			params.projection = lambda: glm.perspective(params.fov, params.aspect_ratio, params.near_clipping_plane, params.far_clipping_plane)
+			params.switch = True
+
 	#Take screenshot
 	if action == glfw.PRESS and key == glfw.KEY_S:
 		print("Taking sceenshot")
 		data = glReadPixels(0, 0, 1024, 768, GL_RGB, GL_UNSIGNED_BYTE)
 		image = Image.frombytes("RGB", (1024, 768), data)
 		image = image.transpose(Image.FLIP_TOP_BOTTOM)
-		name = "Test"
-		image.save(os.path.join("./", name), format='png')
+		name = str(datetime.now()) + ".png"
+		image.save(os.path.join("./Screenshots/", name), format='png')
 		
 	#camera control
 	cameraSpeed = 0.5
 	if glfw.get_key( params.window, glfw.KEY_UP ) == glfw.PRESS:
 		params.position += cameraSpeed * params.front 
+		params.ortho_position += cameraSpeed * params.front
 	if glfw.get_key( params.window, glfw.KEY_DOWN ) == glfw.PRESS:
 		params.position -= cameraSpeed * params.front
+		params.ortho_position -= cameraSpeed * params.front
 	if glfw.get_key( params.window, glfw.KEY_RIGHT ) == glfw.PRESS:
 		params.position -= glm.normalize(glm.cross(params.position, params.up)) * cameraSpeed
+		params.ortho_position -= glm.normalize(glm.cross(params.position, params.up)) * cameraSpeed
 	if glfw.get_key( params.window, glfw.KEY_LEFT ) == glfw.PRESS:
 		params.position += glm.normalize(glm.cross(params.position, params.up)) * cameraSpeed
+		params.ortho_position += glm.normalize(glm.cross(params.position, params.up)) * cameraSpeed

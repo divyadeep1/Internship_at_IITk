@@ -15,6 +15,7 @@ import glfw
 import params
 import Shaders
 
+
 def main():
 	if not common.opengl_init():
 		return
@@ -23,7 +24,9 @@ def main():
 #	vertex_file_path = "./shaders/PlyTest/shadow/StandardColorShading.vertexshader"
 #	fragment_file_path = "./shaders/PlyTest/shadow/StandardColorShading.fragmentshader"
 	s = Shaders.Shader(vertex_file_path, fragment_file_path)
-	c = cube.Cube(s)
+	#f = "ada290-lvl1-li-bl-lg_1.png_ply"
+	f = "final_data_ply"
+	c = cube.Cube(s,f)
 	while glfw.get_key(params.window,glfw.KEY_ESCAPE) != glfw.PRESS and not glfw.window_should_close(params.window):
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 		c.render()
@@ -31,6 +34,7 @@ def main():
 		glfw.poll_events()
 	glfw.terminate()
 	c.release()
+
 
 if __name__ == "__main__":
 	main()

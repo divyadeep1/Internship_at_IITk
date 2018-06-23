@@ -14,3 +14,9 @@
 1. Code for shadow organized.
 2. Window like block created:
 		Run test_3.py
+		
+####### 23/06/2018 #######
+1.Pipeline for generating .ply file from given set of lines is ready:
+	The '.json' files containing the coordinates of end points of lines along with their weights is to be put in './json/Make Walls'.
+2.Pipeline for rendering files and taking their screenshot is also ready.
+3.Backprojection module has been completed and tested.

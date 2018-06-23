@@ -2,5 +2,12 @@ For 04/06/2018 - 10/06/2018:
 	Read '.ply' files and render the object. #DONE
 	Backpropogate and create a 2-d view (top view?) of the rendered 3d object. #DONE
 	
-	Make a screenshot module.
+	Make a screenshot module. #DONE
 	Make a script that positions the camera in a way that the screenshot can be taken to yield correct top view.
+
+For 18/06/2018:
+	1. Render the original lines on top of the original image.
+	2. Make a plan for rendering each ply file and taking it's screenshot
+
+For 24/06/2018:
+	1.Optimize code to use numpy arrays instead of list wherever possible.

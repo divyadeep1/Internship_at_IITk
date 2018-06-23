@@ -1,0 +1,20 @@
+ply
+format ascii 1.0
+comment won't work still.
+element vertex 4
+property float x
+property float y
+property float z
+property float nx
+property float ny
+property float nz
+element face 3
+property list uchar uint vertex_indices
+end_header
+0.0 0.0 0 0.0 1.0 0.0
+1.0 0.0 0.0 0 1.0 0.0
+1.0 0.0 1 0.0 1.0 0.0
+0.0 0.0 1.0 0 1.0 0.0
+3 1 2 3
+3 0 1 2
+3 0 2 3

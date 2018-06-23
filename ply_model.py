@@ -18,47 +18,62 @@ import os
 null = c_void_p(0)
 
 class Cube():
-	def __init__(self, Shader):
-		pd = PlyData.read("./PLY source files/sea051_bisect.ply")
+	def __init__(self, Shader, fname):
+#		pd = PlyData.read("./PLY source files/3d_render raghav sir.ply")
+		path_to_input_file = "./PLY source files/Generated/"
+		self.file_name = fname
+		dot_ply = ".ply"
+		pd = PlyData.read(path_to_input_file+self.file_name+dot_ply)
 		self.vertices = []
 		self.faces = []
 		self.normals = []
-		max_x = max_y = max_z = min_x = min_y = min_z = 0
+		self.max_x = self.max_y = self.max_z = min_x = min_y = min_z = 0
+		self.cx = self.cy = self.cz = 0
+		ctr = 0
+		scale = 0.02
 		#Get vertices and normals
 		for i in pd.elements[0]:
-			self.vertices.append(float(i[0]))
-			max_x = max(float(i[0]), max_x)
-			min_x = min(float(i[0]), min_x)
-			self.vertices.append(float(i[1]))
-			max_y = max(float(i[1]), max_y)
-			min_y = min(float(i[1]), min_y)
-			self.vertices.append(float(i[2]))
-			max_z = max(float(i[2]), max_z)
-			min_z = min(float(i[2]), min_z)
+			self.vertices.append(scale*float(i[0]))
+			self.cx += scale*float(i[0])
+			self.max_x = max(scale*float(i[0]), self.max_x)
+			min_x = min(scale*float(i[0]), min_x)
+			self.vertices.append(scale*float(i[1]))
+			self.cy += scale*float(i[1])
+			self.max_y = max(scale*float(i[1]), self.max_y)
+			min_y = min(scale*float(i[1]), min_y)
+			self.vertices.append(scale*float(i[2]))
+			self.cz += scale*float(i[2])
+			self.max_z = max(scale*float(i[2]), self.max_z)
+			min_z = min(scale*float(i[2]), min_z)
 			self.normals.append(float(i[3]))
 			self.normals.append(float(i[4]))
 			self.normals.append(float(i[5]))
-		print(max_x , max_y , max_z , min_x , min_y , min_z)
-		
+			ctr += 1
+		#print(max_x , max_y , max_z , min_x , min_y , min_z)
+		self.cx = self.cx/ctr
+		self.cy = self.cy/ctr
+		self.cz = self.cz/ctr
+		#params.position = glm.vec3(self.max_x/4,self.max_y/3,4*self.max_z)
+		params.position = glm.vec3(self.cx,self.cy,self.cz*2)
 		#plane vertices, faces and normals
-		self.plane_vertices = [-20.0,50.0,0.0,
+		self.plane_vertices = [-100.0,50.0,0.0,
 						  -100.0,-14.0,0.0,
 						  100.0,-14.0,0.0,
-						  100.0,50.0,0.0,
-						  100.0,-14.0,0.0,
-						  -100.0,-14.0,0.0,
-						  -100.0,-14.0,50.,
-						  100.0,-14.0,50.0]
+						  100.0,50.0,0.0]
+#						  100.0,-14.0,0.0,
+#						  -100.0,-14.0,0.0,
+#						  -100.0,-14.0,50.,
+#						  100.0,-14.0,50.0]
 		#self.plane_faces = [0,1,2,3,
 		#			   4,5,6,7]
 		self.plane_normals = [0,0,1,
 						 0,0,1,
 						 0,0,1,
-						 0,0,1,
-						 0,1,0,
-						 0,1,0,
-						 0,1,0,
-						 0,1,0]
+						 0,0,1]
+#						 0,1,0,
+#						 0,1,0,
+#						 0,1,0,
+#						 0,1,0]
 		
 		#Get faces
 		for i in pd.elements[1]:
@@ -96,16 +111,16 @@ class Cube():
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.element_buffer)
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, len(self.faces) * 4, array_type(*self.faces), GL_STATIC_DRAW)
 		
-#		#Plane's buffers:
-#		self.plane_vertex_buffer = glGenBuffers(1)
-#		array_type = GLfloat * len(self.plane_vertices)
-#		glBindBuffer(GL_ARRAY_BUFFER, self.plane_vertex_buffer)
-#		glBufferData(GL_ARRAY_BUFFER, len(self.plane_vertices) * 4, array_type(*self.plane_vertices), GL_STATIC_DRAW)
-#		
-#		self.plane_normal_buffer = glGenBuffers(1)
-#		array_type = GLfloat * len(self.plane_normals)
-#		glBindBuffer(GL_ARRAY_BUFFER, self.plane_normal_buffer)
-#		glBufferData(GL_ARRAY_BUFFER, len(self.plane_normals) * 4, array_type(*self.plane_normals), GL_STATIC_DRAW)
+		#Plane's buffers:
+		self.plane_vertex_buffer = glGenBuffers(1)
+		array_type = GLfloat * len(self.plane_vertices)
+		glBindBuffer(GL_ARRAY_BUFFER, self.plane_vertex_buffer)
+		glBufferData(GL_ARRAY_BUFFER, len(self.plane_vertices) * 4, array_type(*self.plane_vertices), GL_STATIC_DRAW)
+		
+		self.plane_normal_buffer = glGenBuffers(1)
+		array_type = GLfloat * len(self.plane_normals)
+		glBindBuffer(GL_ARRAY_BUFFER, self.plane_normal_buffer)
+		glBufferData(GL_ARRAY_BUFFER, len(self.plane_normals) * 4, array_type(*self.plane_normals), GL_STATIC_DRAW)
 		
 		######DIFFERENT CODE FROM cube_test_1.py file BEGINS######
 
@@ -113,8 +128,8 @@ class Cube():
 		self.shadow_shader = Shaders.Shader('./shaders/PlyTest/shadow/StandardShadowShading.vertexshader',
 				                            './shaders/PlyTest/shadow/StandardShadowShading.fragmentshader')
 		self.depthMapFBO = glGenFramebuffers(1)
-		self.SHADOW_WIDTH = 1024
-		self.SHADOW_HEIGHT = 1024
+		self.SHADOW_WIDTH = 2046
+		self.SHADOW_HEIGHT = 2046
 
 		self.depthMap = glGenTextures(1)
 		glBindTexture(GL_TEXTURE_2D, self.depthMap)
@@ -130,7 +145,7 @@ class Cube():
 		# attach depth texture as FBO's depth buffer
 		glBindFramebuffer(GL_FRAMEBUFFER, self.depthMapFBO)
 		glFramebufferTexture2D(
-			GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, self.depthMap, 0)
+			GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, self.depthMap, 3)
 		glDrawBuffer(GL_NONE)
 		glReadBuffer(GL_NONE)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0)
@@ -139,6 +154,10 @@ class Cube():
 		else:
 			print("Framebuffer creation failed")
 			return
+		params.position = glm.vec3(8.34048, 2.24112, 15.9789)
+		params.front = glm.vec3(0.00150267, 0.331372, -0.943499)
+
+	
 	def rotate(self,angle,axis):
 		self.model = glm.rotate(self.model, angle, axis)
 		
@@ -149,18 +168,20 @@ class Cube():
 		return (params.projection() * params.view() * params.model())
 
 	def take_screenshot(self):
-		print("Taking sceenshot.")
+		path_to_output_screenshot = "./Screenshots/Bulk"
+		print("Taking sceenshot")
 		data = glReadPixels(0, 0, 1024, 768, GL_RGB, GL_UNSIGNED_BYTE)
 		image = Image.frombytes("RGB", (1024, 768), data)
 		image = image.transpose(Image.FLIP_TOP_BOTTOM)
-		name = "sea051_bisect"
-		image.save(os.path.join("./Screenshots", name), format='png')
-		print("Screenshot captured.")
+		name = str(self.file_name[:-4]) + ".png"
+		#name = "co_ordinates_line0.png"
+		image.save(os.path.join(path_to_output_screenshot, name), format='png')
+		params.screenshot_taken = True
 
 	def render(self):
 		light_color = glm.vec3(1.0,1.0,1.0)
 		params.t = (params.t+1)%1000000000
-		light_position = glm.vec3(100.0,10.0,50.0)#glm.vec3(50*math.sin(0.0002*params.t), 20.0, 50*math.cos(0.0002*params.t))#
+		light_position = glm.vec3(-1.0,2.0,15.0)#glm.vec3(50*math.sin(0.0002*params.t), 20.0, 50*math.cos(0.0002*params.t))#
 
 		glUseProgram(self.shader.ID)
 		glUniformMatrix4fv(glGetUniformLocation(self.shader.ID, "MVP"), 1, GL_FALSE, glm.value_ptr(self.mvp()))
@@ -189,40 +210,47 @@ class Cube():
 		#glDisableVertexAttribArray(2)
 		glEnable(GL_DEPTH_TEST)
 
-#		glEnableVertexAttribArray(0)
-#		glBindBuffer(GL_ARRAY_BUFFER, self.plane_vertex_buffer);
-#		glVertexAttribPointer(0, 3,	GL_FLOAT, GL_FALSE,	0, null)
-#		
-#		glEnableVertexAttribArray(1)
-#		glBindBuffer(GL_ARRAY_BUFFER, self.plane_normal_buffer);
-#		glVertexAttribPointer(1, 3,	GL_FLOAT, GL_FALSE,	0, null)
-#		
-#		glDrawArrays(GL_QUADS, 0, 8)
-#		glDisableVertexAttribArray(0)
-#		glDisableVertexAttribArray(1)
+		glEnableVertexAttribArray(0)
+		glBindBuffer(GL_ARRAY_BUFFER, self.plane_vertex_buffer);
+		glVertexAttribPointer(0, 3,	GL_FLOAT, GL_FALSE,	0, null)
+		
+		glEnableVertexAttribArray(1)
+		glBindBuffer(GL_ARRAY_BUFFER, self.plane_normal_buffer);
+		glVertexAttribPointer(1, 3,	GL_FLOAT, GL_FALSE,	0, null)
+		
+		glDrawArrays(GL_QUADS, 0, 8)
+		glDisableVertexAttribArray(0)
+		glDisableVertexAttribArray(1)
 		if self.screenshot_timer==100:
-			print(self.screenshot_timer)
 			self.take_screenshot()
 			self.screenshot_timer += 1
 		else:
 			if self.screenshot_timer<100:
 				self.screenshot_timer += 1
 
+		#print(params.ortho_position, params.ortho_front)
+
+
 	def render_with_shadows(self):
 		params.t = (params.t+1) % 1000000000
-		params.light_position = glm.vec3(30*math.sin(0.0005*params.t), 10.0, 50.0*math.cos(0.0005*params.t))#glm.vec3(20.0,20.0,10.0)
+		params.light_position = glm.vec3(10.0,-5.0,20.0)#glm.vec3(100.0,10.0,50.0)#glm.vec3(self.max_x*math.sin(0.0005*params.t), self.max_y*math.cos(0.0005*params.t), 2*self.max_z)#
 
 		######RENDERING DEPTH OF SCENE FROM LIGHT'S PERSPECTIVE######
 		glClearColor(0.1, 0.1, 0.1, 1.0)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
 		# The lightProjection matrix is actually static but is kept in the render loop for the sake of convinience and easy access
-		lightProjection = glm.ortho(-10.0, 10.0, -10.0,
-				                    10.0, params.near_plane, params.far_plane)
+		lightProjection = glm.ortho(-20.0, 30.0, -20.0,
+				                    30.0, params.near_plane, params.far_plane)
 		lightView = glm.lookAt(params.light_position,
-				               glm.vec3(10.0,10.0,0.0), glm.vec3(0.0, 1.0, 0.0))
+				               glm.vec3(self.cx,self.cy,self.cz), glm.vec3(0.0, 1.0, 0.0))
 		lightSpaceMatrix = lightProjection * lightView
-
+#		lightSpaceMatrix = lightSpaceMatrix * glm.mat4(
+#							0.5, 0.0, 0.0, 0.0,
+#							0.0, 0.5, 0.0, 0.0,
+#							0.0, 0.0, 0.5, 0.0,
+#							0.5, 0.5, 0.5, 1.0
+#							)
 		###render scene from light's point of view###
 		glUseProgram(self.shadow_shader.ID)
 		glUniformMatrix4fv(glGetUniformLocation(self.shadow_shader.ID, "lightSpaceMatrix"),
@@ -231,7 +259,7 @@ class Cube():
 				           glm.value_ptr(lightSpaceMatrix))
 		glViewport(0, 0, self.SHADOW_WIDTH, self.SHADOW_HEIGHT)
 		glEnable(GL_CULL_FACE)
-		# glCullFace(GL_BACK)
+		#glCullFace(GL_BACK)
 		# Culling the front face to make shadow map that does not suffer from peter-panning
 		glCullFace(GL_FRONT)
 		glBindFramebuffer(GL_FRAMEBUFFER, self.depthMapFBO)
@@ -319,9 +347,21 @@ class Cube():
 		glDisableVertexAttribArray(1)
 		glEnable(GL_DEPTH_TEST)
 		
-		if not self.screenshot_taken:
-			self.take_screenshot
-			self.screenshot_taken = True
+#		if self.screenshot_timer==100:
+#			print("Calling backproject...")
+#			backproject(self.vertex_buffer,
+#						len(self.vertices),
+#						self.normal_buffer,
+#						len(self.normals),
+#						self.element_buffer,
+#						len(self.faces),
+#						self.cx,
+#						self.cy
+#						)
+#			self.screenshot_timer += 1
+#		else:
+#			if self.screenshot_timer<100:
+#				self.screenshot_timer += 1
 
 
 
