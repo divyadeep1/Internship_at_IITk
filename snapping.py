@@ -93,7 +93,29 @@ def calculate_bin_para(i):
     return sum1/sum2,sum3/(2*sum2)
 
 
+       
+def misplacement_check(i,k):
 
+    mx,mn=max(i[1],i[2]),min(i[1],i[2])
+    mx_dash,mn_dash=max(k[1],k[2]),min(k[1],k[2])
+    if(mx!=mn):
+        if(not(mn_dash>=mx or mx_dash<=mn)):
+            return 1
+        else:
+            return 0
+    else:
+          mx,mn=max(i[3],i[4]),min(i[3],i[4])
+          mx_dash,mn_dash=max(k[3],k[4]),min(k[3],k[4])
+          if(not(mn_dash>=mx or mx_dash<=mn)):
+              return 1
+          else:   
+              return 0
+
+def length(k):
+    p1=np.array([k[1],k[3]])
+    p2=np.array([k[2],k[4]])
+    return np.linalg.norm(p1-p2)
+     
 def calculate_alpha(rc,v,r,lcap):
     global ebsilon 
     a=(r-v)
@@ -141,9 +163,14 @@ def find_alphas(i,bcm,index):
         
 if __name__== "__main__":
 
+    global ebsilon
+    global lbl
+    global delta
+
 
     ############ parameters for tweking #######################
-    thresh_bin=10 
+    delta=10
+    thresh_bin=10
     range_thresh=0.05
     r_granularity=0.1
     theta_granularity=0.001
@@ -166,13 +193,12 @@ if __name__== "__main__":
 
     
 
-    path = '/Users/Dell/Desktop/box_thresh/'
+    path = './box_thresh/'
     # Store the image file names in a list as long as they are jpgs
     images = [f for f in os.listdir(path) if os.path.splitext(f)[-1] == extension]
     for i in images:
     
-        global ebsilon
-        global lbl
+        
         lines=None
         label=0
         lbl=0
@@ -182,10 +208,11 @@ if __name__== "__main__":
         img = cv.imread(image_name,0)
         img2=cv.imread(image_name)
         _,img=cv.threshold(img,223,255,cv.THRESH_BINARY)
-
-     
         
         ebsilon=0.1
+     
+        
+        
         
         vis=np.full((1000,),1)
 
@@ -213,19 +240,28 @@ if __name__== "__main__":
 
                  
         ##bin creation       
-            for i in res:
+            for j,i in enumerate(res):
                     temp=[]
                     
-                    if(vis[i[0]]==1):
-                        vis[i[0]]=0
+                    if(vis[j]==1):
+                        vis[j]=0
                         r_mod,r_cap,l_cap=find_line_para(i)
+                        l=[]
+                        flag=0
                         temp.append((i[1],i[2],i[3],i[4],r_mod,r_cap,l_cap))###############to be done in O(n)
-                        for k in res:
-                            if(vis[k[0]]!=0):
-                                r_dash_mod,r_dash_cap,l_dash_cap=find_line_para(k)
-                                if((abs(r_mod-r_dash_mod)<thresh_bin) and (np.linalg.norm(r_cap-r_dash_cap))<range_thresh):
-                                    vis[k[0]]=0  
-                                    temp.append((k[1],k[2],k[3],k[4],r_dash_mod,r_dash_cap,l_dash_cap))
+                        while(flag==0):
+                            flag=1
+                            for m,k in enumerate(res):
+                                if(vis[m]!=0):
+                                    r_dash_mod,r_dash_cap,l_dash_cap=find_line_para(k)
+                                    if((abs(r_mod-r_dash_mod)<thresh_bin) and (np.linalg.norm(r_cap-r_dash_cap)<range_thresh) and (misplacement_check(i,k))):
+                                        vis[m]=0
+                                        flag=0
+                                        temp.append((k[1],k[2],k[3],k[4],r_dash_mod,r_dash_cap,l_dash_cap))
+                                        if(length(k)>length(i)):
+                                            i=k
+                                            
+                                    
                         bn.append(temp)
 
         ##parameters of bin                
