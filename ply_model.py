@@ -27,6 +27,7 @@ class Cube():
 		self.vertices = []
 		self.faces = []
 		self.normals = []
+		self.triads = []
 		self.max_x = self.max_y = self.max_z = min_x = min_y = min_z = 0
 		self.cx = self.cy = self.cz = 0
 		ctr = 0
@@ -80,6 +81,16 @@ class Cube():
 			#print(i[0])
 			for j in range(4):
 				self.faces.append(i[0][j])
+		
+		
+		print(len(pd.elements))
+		#Get triads
+		if(len(pd.elements)>2):
+			for i in pd.elements[2]:
+				for j in range(3):
+					self.triads.append(i[0][j])
+					self.triads.append(i[0][2])
+		print(self.triads)
 		"""
 		for v in plane_vertices:
 			self.vertices.append(v)
@@ -110,6 +121,12 @@ class Cube():
 		array_type = GLuint * len(self.faces)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.element_buffer)
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, len(self.faces) * 4, array_type(*self.faces), GL_STATIC_DRAW)
+		
+		if len(self.triads)>0:
+			self.triad_buffer = glGenBuffers(1)
+			array_type = GLuint * len(self.triads)
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.triad_buffer)
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, len(self.triads) * 4, array_type(*self.triads), GL_STATIC_DRAW)
 		
 		#Plane's buffers:
 		self.plane_vertex_buffer = glGenBuffers(1)
@@ -200,16 +217,24 @@ class Cube():
 		glBindBuffer(GL_ARRAY_BUFFER, self.normal_buffer);
 		glVertexAttribPointer(1, 3,	GL_FLOAT, GL_FALSE,	0, null)
 		
+		#if self.screenshot_timer %5000 < 2500:
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.element_buffer)
 		
 		
 		# Draw the figure !
 		glDrawElements(GL_QUADS, len(self.faces), GL_UNSIGNED_INT, None) #Important! - The last arguement will be 'None', not 0!
+		
+		if(len(self.triads)>0):
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.triad_buffer)
+			glDrawElements(GL_TRIANGLES, len(self.triads), GL_UNSIGNED_INT, None)
+		
 		glDisableVertexAttribArray(0)
 		glDisableVertexAttribArray(1)
 		#glDisableVertexAttribArray(2)
 		glEnable(GL_DEPTH_TEST)
 
+
+		#Draw the plane
 		glEnableVertexAttribArray(0)
 		glBindBuffer(GL_ARRAY_BUFFER, self.plane_vertex_buffer);
 		glVertexAttribPointer(0, 3,	GL_FLOAT, GL_FALSE,	0, null)
@@ -225,7 +250,7 @@ class Cube():
 			self.take_screenshot()
 			self.screenshot_timer += 1
 		else:
-			if self.screenshot_timer<100:
+			if self.screenshot_timer!=100:
 				self.screenshot_timer += 1
 
 		#print(params.ortho_position, params.ortho_front)

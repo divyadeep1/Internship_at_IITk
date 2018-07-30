@@ -20,3 +20,10 @@
 	The '.json' files containing the coordinates of end points of lines along with their weights is to be put in './json/Make Walls'.
 2.Pipeline for rendering files and taking their screenshot is also ready.
 3.Backprojection module has been completed and tested.
+
+####### 30/07/2018 #######
+1.I messed around with a couple of files, the old copy of them is saved in <filename>_old.py.
+	For example I altered 'extruder.py', so the old one is kept in 'extruder_old.py'.
+	However, the old file is used when the pipeline is being run.
+2.Hypothesis - Thinning operation can be performed on original images, that would lead to better houg-line detection. Check 'thinning.py'.
+3.Fixed a minor bug in 'face_maker.py' that caused incorrect addition of triads at the junction of multiple lines.

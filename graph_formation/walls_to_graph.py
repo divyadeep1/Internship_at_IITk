@@ -60,11 +60,12 @@ def make_graph_from_1d_walls(file_name):
 				"weights" : weights,
 				"edges" : edges_new}
 			
-	#print (data_out)
-
+#	for v in vertices:
+#		if v[0]>500 or v[1]>500:
+#			print(v)
 	with open(path_to_output_file+file_name+"_graph"+dot_json, 'w') as f:
 		json.dump(data_out,f)
 
 if __name__ == "__main__":
 	#make_graph_from_1d_walls("ada290-lvl1-li-bl-lg_1.png")
-	make_graph_from_1d_walls("fba174-lvl2-li-bl-lg.png")
+	make_graph_from_1d_walls("final_data_s")

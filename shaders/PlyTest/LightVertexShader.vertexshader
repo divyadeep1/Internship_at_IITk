@@ -22,10 +22,10 @@ void main(){
 	// The color of each vertex will be interpolated
 	// to produce the color of each fragment
 	//fragmentColor = vec3(vertexPosition_modelspace.z/5.1,vertexPosition_modelspace.z/5.1,vertexPosition_modelspace.z/5.1); //Deapthwise different colors
-	//fragmentColor = vec3(0.0,0.1,1.0);
-	fragmentColor = vec3(1,1,1);
+	fragmentColor = vec3(0.0,0.1,1.0);
+	//fragmentColor = vec3(1,1,1);
 	if(vertexPosition_modelspace.x==100 || vertexPosition_modelspace.x==-100)
-	fragmentColor = vec3(0,0,0);
+	fragmentColor = vec3(0.7,0.7,0.7);
 	normal = mat3(transpose(inverse(model))) * aNormal;
 }
 

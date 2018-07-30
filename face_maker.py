@@ -43,27 +43,60 @@ class face_maker():
         fc=(count,count+1,count+2,count+3)
         self.face.append((fc,))
         
+#    def add_triads(self,triads_to_add):
+#        #print(triads_to_add)
+#        z0, z1 = self.z0, self.z1
+#        for zone in triads_to_add:
+#            ctr = 0
+#            i = len(self.mply)
+#            for v in zone:
+#                self.mply.append((v[0],v[1],z0,0,0,-1))
+#                ctr +=1
+#                if ctr>2:
+#                    self.triads.append(((i,i+1,i+2),))
+#                    i += 1
+#            ctr = 0
+#            i = len(self.mply)
+#            for v in zone:
+#               self.mply.append((v[0],v[1],z1,0,0,1))
+#               ctr +=1
+#               if ctr>2:
+#                   self.triads.append(((i,i+1,i+2),))
+#                   i += 1
+        
     def add_triads(self,triads_to_add):
-        #print(triads_to_add)
         z0, z1 = self.z0, self.z1
         for zone in triads_to_add:
-            ctr = 0
-            i = len(self.mply)
-            for v in zone:
-                self.mply.append((v[0],v[1],z0,0,0,-1))
-                ctr +=1
-                if ctr>2:
-                    self.triads.append(((i,i+1,i+2),))
-                    i += 1
-            ctr = 0
-            i = len(self.mply)
-            for v in zone:
-               self.mply.append((v[0],v[1],z1,0,0,1))
-               ctr +=1
-               if ctr>2:
-                   self.triads.append(((i,i+1,i+2),))
-                   i += 1
-        
+            if(len(zone)==3):
+                ctr = 0
+                i = len(self.mply)
+                for v in zone:
+                    self.mply.append((v[0],v[1],z0,0,0,-1))
+                    ctr +=1
+                    if ctr>2:
+                        self.triads.append(((i,i+1,i+2),))
+                        i += 1
+                ctr = 0
+                i = len(self.mply)
+                for v in zone:
+                   self.mply.append((v[0],v[1],z1,0,0,1))
+                   ctr +=1
+                   if ctr>2:
+                       self.triads.append(((i,i+1,i+2),))
+                       i += 1
+            elif len(zone)==4:
+                #ctr = 0
+                i = len(self.mply)
+                for v in zone:
+                    self.mply.append((v[0],v[1],z0,0,0,-1))
+                self.triads.append(((i,i+1,i+2),))
+                self.triads.append(((i,i+2,i+3),))
+                i = len(self.mply)
+                for v in zone:
+                    self.mply.append((v[0],v[1],z1,0,0,1))
+                self.triads.append(((i,i+1,i+2),))
+                self.triads.append(((i,i+2,i+3),))
+
     def generate_ply(self,stream):
         b=np.array(self.mply,dtype=[('x','f4'),('y','f4'),('z','f4'),('nx','f4'),('ny','f4'),('nz','f4')])
         a=np.array(self.face,dtype=[('vertex_indices', 'i4', (4,))])

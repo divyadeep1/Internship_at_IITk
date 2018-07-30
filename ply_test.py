@@ -25,7 +25,7 @@ def main():
 #	fragment_file_path = "./shaders/PlyTest/shadow/StandardColorShading.fragmentshader"
 	s = Shaders.Shader(vertex_file_path, fragment_file_path)
 	#f = "ada290-lvl1-li-bl-lg_1.png_ply"
-	f = "final_data_ply"
+	f = "testing_ply"
 	c = cube.Cube(s,f)
 	while glfw.get_key(params.window,glfw.KEY_ESCAPE) != glfw.PRESS and not glfw.window_should_close(params.window):
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)

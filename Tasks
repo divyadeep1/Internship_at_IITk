@@ -1,13 +1,22 @@
 For 04/06/2018 - 10/06/2018:
-	Read '.ply' files and render the object. #DONE
-	Backpropogate and create a 2-d view (top view?) of the rendered 3d object. #DONE
+	1. Read '.ply' files and render the object. #DONE
+	2. Backpropogate and create a 2-d view (top view?) of the rendered 3d object. #DONE
 	
-	Make a screenshot module. #DONE
-	Make a script that positions the camera in a way that the screenshot can be taken to yield correct top view.
+	3. Make a screenshot module. #DONE
+	4. Make a script that positions the camera in a way that the screenshot can be taken to yield correct top view. #DONE
 
 For 18/06/2018:
-	1. Render the original lines on top of the original image.
-	2. Make a plan for rendering each ply file and taking it's screenshot
+	1. Render the original lines on top of the original image. #DONE
+	2. Make a plan for rendering each ply file and taking it's screenshot #DONE
 
 For 24/06/2018:
-	1.Optimize code to use numpy arrays instead of list wherever possible.
+	1. Optimize code to use numpy arrays instead of list wherever possible.
+	2. Keep floating point values, don't round off.
+
+For 27/06/2018:
+	1. Report the problem with the pipeline.
+	2. Work on fixing the problem.
+	4. Finalize the presentation and recheck the pipeline.
+
+
+#TODO: Test 'thinning' followed by 'pruning' on the output of threshing, before applying houghline transform and document the results.

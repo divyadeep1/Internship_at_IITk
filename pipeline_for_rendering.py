@@ -17,7 +17,7 @@ import Shaders
 
 
 def main():
-	path = './PLY source files/Generated'
+	path = './PLY source files/Generated/'
 	files = os.listdir(path)
 	for file_name in files:
 		if file_name in ["test","aha815-lvl1-li-bl-lg.png"]:
