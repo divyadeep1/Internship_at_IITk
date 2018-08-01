@@ -9,7 +9,7 @@ import copy
 import json
 import sys
 #d = 5 #wall width
-d = 6
+d = 10
 #vertices = [[-2.,0.],[-1.,0.],[0.,-1.],[0.,1.],[1.,0.],[2.,0.]]
 #edges = [[1],[0,2,3],[4,1],[1,4],[2,5,3],[4]]
 
@@ -251,7 +251,7 @@ def extrude_1d_walls_in_3d(file_name):
 
 	#print("\n\n")
 
-	fm = face_maker(0.0,100.0)
+	fm = face_maker(0.0,150.0)
 
 	traverse_edges(new_edges, new_vertices, normals, fm.quad)
 

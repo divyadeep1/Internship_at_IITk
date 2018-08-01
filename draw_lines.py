@@ -64,17 +64,17 @@ def draw(file_name):
 	cv2.imwrite('./Screenshots/Cleaned_lines/'+file_name+'.png',img2)
 
 	for line in new1:
-		img3 = cv2.line(imgu,(line[1],line[3]), (line[2],line[4]), (random.randint(0,255),random.randint(0,255),random.randint(0,255)),1)
+		img3 = cv2.line(imgu,(line[1],line[3]), (line[2],line[4]), (random.randint(0,255),random.randint(0,255),random.randint(0,255)),3)
 	cv2.imwrite('./Screenshots/Cleaned_lines/'+file_name+'_1_union.png',img3)
 
 	for line in new2:
 	#	if line[5]>0:
-		img4 = cv2.line(imgvs,(line[1],line[3]), (line[2],line[4]), (random.randint(0,255),random.randint(0,255),random.randint(0,255)),1)
+		img4 = cv2.line(imgvs,(line[1],line[3]), (line[2],line[4]), (random.randint(0,255),random.randint(0,255),random.randint(0,255)),3)
 	cv2.imwrite('./Screenshots/Cleaned_lines/'+file_name+'_2_vertices_snapped.png',img4)
 
 	for line in new3:
 	#	if line[5]>0:
-		img5 = cv2.line(imgi,(line[1],line[3]), (line[2],line[4]), (random.randint(0,255),random.randint(0,255),random.randint(0,255)),1)
+		img5 = cv2.line(imgi,(line[1],line[3]), (line[2],line[4]), (random.randint(0,255),random.randint(0,255),random.randint(0,255)),3)
 	cv2.imwrite('./Screenshots/Cleaned_lines/'+file_name+'_3_intersections.png',img5)
 
 if __name__=='__main__':
